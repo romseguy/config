@@ -7,8 +7,10 @@ exec --no-startup-id xsettingsd
 #exec --no-startup-id ~/Nextcloud-3.8.1-x86_64.AppImage
 #exec --no-startup-id ~/Executables/Nextcloud-3.10.0-rc2-x86_64.AppImage
 exec --no-startup-id setxkbmap -option caps:escape
-exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background.jpg
+#exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background.jpg
+exec --no-startup-id && feh --bg-center ~/.config/i3/backgrounds/background3.jpg
 #exec --no-startup-id sleep 1 && ~/.config/i3/keyboard_fr
+#exec i3-gnome-pomodoro daemon &
 
 # Touchpad
 exec --no-startup-id xinput | grep -i Syn | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "libinput Tapping Enabled" 1
@@ -33,16 +35,46 @@ client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
 client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
-# screens toggles
-bindsym $mod+F5 exec xrandr --output eDP-1 --off
-bindsym $mod+Shift+F5 exec xrandr --output DP-2 --off
-bindsym $mod+F6 exec xrandr --output eDP-1 --auto
-bindsym $mod+Shift+F6 exec xrandr --output DP-2 --right-of eDP-1 --auto
+# general
+set $mod Mod4
+font pango:DejaVu Sans Mono 14
+workspace_layout tabbed
+floating_modifier $mod
+bindsym XF86Sleep nop
+#bindsym XF86KbdBrightnessUp exec ~/Executables/keyboard_on
+#bindsym XF86KbdBrightnessDown exec ~/Executables/keyboard_off
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+x debuglog toggle
+bindsym $mod+B mode "$mode_system"
+set $mode_system (e) lock, (Shift+e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+	bindsym e exec --no-startup-id ~/.config/i3/lock
+	bindsym Shift+e exec --no-startup-id i3-msg exit, mode "default"
+	bindsym s exec --no-startup-id systemctl suspend, mode "default"
+	bindsym r exec --no-startup-id systemctl reboot, mode "default"
+	bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+
+	# back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+
+# screens toggle
+bindsym $mod+Ctrl+F2 exec xrandr --output eDP-1 --off
+bindsym $mod+Ctrl+Shift+F2 exec xrandr --output DP-2 --off
+bindsym $mod+Ctrl+F1 exec xrandr --output eDP-1 --auto
+bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --right-of eDP-1 --auto
+
+# theme toggle
 bindsym $mod+F9 exec bash ~/Executables/i3theme '"Adwaita"'
 bindsym $mod+Shift+F9 exec bash ~/Executables/i3theme '"Adwaita-dark"'
 
-# pomo toggles
-bindsym $mod+Shift+P exec ~/.local/bin/i3-gnome-pomodoro start-stop
+# pomo toggle
+bindsym $mod+F10 exec "i3-gnome-pomodoro skip"
+bindsym $mod+F11 exec "i3-gnome-pomodoro toggle"
+bindsym $mod+F12 exec "i3-gnome-pomodoro start-stop"
+#bindsym $mod+Shift+P exec ~/.local/bin/i3-gnome-pomodoro toggle
 
 # bottom bar
 bar {
@@ -76,12 +108,6 @@ bar {
 	}
 }
 
-
-# dmenu
-set $dmenu "dmenu -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -f -i -fn 'DejaVu Sans Mono-14' -l 20"
-#bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu --display-binary
-bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu
-
 # windows
 for_window [all] title_window_icon padding 3px
 #hide_edge_borders both
@@ -92,14 +118,10 @@ bindsym --release button2 kill
 #bindsym $mod+t exec xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 1 # enable touchpad
 #bindsym $mod+Shift+t exec xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 0 # disable touchpad
 
-set $mod Mod4
-font pango:DejaVu Sans Mono 14
-workspace_layout tabbed
-floating_modifier $mod
-
-bindsym XF86Sleep nop
-#bindsym XF86KbdBrightnessUp exec ~/Executables/keyboard_on
-#bindsym XF86KbdBrightnessDown exec ~/Executables/keyboard_off
+# dmenu
+set $dmenu "dmenu -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -f -i -fn 'DejaVu Sans Mono-14' -l 20"
+bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu --display-binary
+#bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+d layout toggle split
@@ -152,7 +174,9 @@ bindsym $mod+Left move workspace to output left
 bindsym $mod+Shift+q kill
 
 # floating mode
-bindsym $mod+Shift+space floating toggle
+#bindsym $mod+Shift+space floating toggle
+# change focus between tiling / floating windows
+#bindsym $mod+space focus mode_toggle
 
 # change focus
 bindsym $mod+h focus left
@@ -160,8 +184,6 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
 
 # move focused window
 bindsym $mod+Shift+h move left
@@ -172,17 +194,7 @@ bindsym $mod+Shift+l move right
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
 
-# terminal
-# bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec --no-startup-id cd "`xcwd`" && xterm
-
-# file manager
-bindsym $mod+e exec nemo
-
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+r restart
-bindsym $mod+x debuglog toggle
-
+# enter resize mode
 bindsym $mod+r mode "resize"
 mode "resize" {
 	bindsym h resize shrink width 10 px or 10 ppt
@@ -195,20 +207,16 @@ mode "resize" {
 	bindsym Escape mode "default"
 }
 
-bindsym $mod+B mode "$mode_system"
-set $mode_system (e) lock, (Shift+e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
-mode "$mode_system" {
-	bindsym e exec --no-startup-id ~/.config/i3/lock
-	bindsym Shift+e exec --no-startup-id i3-msg exit, mode "default"
-	bindsym s exec --no-startup-id systemctl suspend, mode "default"
-	bindsym r exec --no-startup-id systemctl reboot, mode "default"
-	bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+# terminal
+# bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec --no-startup-id cd "`xcwd`" && xterm
 
-	# back to normal: Enter or Escape
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
-}
+# file manager
+bindsym $mod+e exec nemo
 
+# browser
+bindsym $mod+g exec google-chrome-stable
+bindsym $mod+Shift+g exec brave-browser-stable
 
 # Media player controls
 #bindsym XF86AudioPlay exec playerctl play
