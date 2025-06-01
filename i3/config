@@ -1,4 +1,5 @@
 # startup
+exec --no-startup-id udiskie -t
 exec --no-startup-id nm-applet
 exec --no-startup-id parcellite
 #exec --no-startup-id xpad
@@ -7,10 +8,12 @@ exec --no-startup-id xsettingsd
 #exec --no-startup-id ~/Nextcloud-3.8.1-x86_64.AppImage
 #exec --no-startup-id ~/Executables/Nextcloud-3.10.0-rc2-x86_64.AppImage
 exec --no-startup-id setxkbmap -option caps:escape
-#exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background.jpg
-exec --no-startup-id && feh --bg-center ~/.config/i3/backgrounds/background3.jpg
-#exec --no-startup-id sleep 1 && ~/.config/i3/keyboard_fr
+#exec --no-startup-id sleep 2 && feh --bg-scale ~/.config/i3/backgrounds/background.jpg
+exec --no-startup-id sleep 2 && feh --bg-fill ~/.config/i3/backgrounds/background.jpg
+#exec --no-startup-id sleep 2 && feh --bg-scale ~/.config/i3/backgrounds/background1.jpg
+exec --no-startup-id sleep 1 && ~/.config/i3/i3kl set fr
 #exec i3-gnome-pomodoro daemon &
+#exec --no-startup-id dex -ae i3
 
 # Touchpad
 exec --no-startup-id xinput | grep -i Syn | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "libinput Tapping Enabled" 1
@@ -37,7 +40,7 @@ client.background       #F8F8F2
 
 # general
 set $mod Mod4
-font pango:DejaVu Sans Mono 14
+#font pango:Terminus 14
 workspace_layout tabbed
 floating_modifier $mod
 bindsym XF86Sleep nop
@@ -61,10 +64,13 @@ mode "$mode_system" {
 }
 
 # screens toggle
-bindsym $mod+Ctrl+F2 exec xrandr --output eDP-1 --off
-bindsym $mod+Ctrl+Shift+F2 exec xrandr --output DP-2 --off
-bindsym $mod+Ctrl+F1 exec xrandr --output eDP-1 --auto
-bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --right-of eDP-1 --auto
+## HDMI-A-0
+bindsym $mod+Ctrl+Shift+F2 exec xrandr --output HDMI-A-0 --off
+bindsym $mod+Ctrl+Shift+F1 exec xrandr --output HDMI-A-0 --auto
+
+## DVI-D-0
+bindsym $mod+Ctrl+F2 exec xrandr --output DVI-D-0 --off
+bindsym $mod+Ctrl+F1 exec xrandr --output DVI-D-0 --right-of HDMI-A-0 --auto
 
 # theme toggle
 bindsym $mod+F9 exec bash ~/Executables/i3theme '"Adwaita"'
@@ -90,7 +96,7 @@ bar {
 	#status_command ~/.config/i3/any_position_wrapper.sh
 	#status_command i3status -c ~/.config/i3/i3status.conf | ~/.config/i3/wrapper.pl
 
-	font pango:DejaVu Sans Mono 8
+	#font pango:Terminus 8
 	#separator_symbol ":***:"
   #strip_workspace_numbers yes
 
@@ -119,8 +125,11 @@ bindsym --release button2 kill
 #bindsym $mod+Shift+t exec xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 0 # disable touchpad
 
 # dmenu
-set $dmenu "dmenu -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -f -i -fn 'DejaVu Sans Mono-14' -l 20"
-bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu --display-binary
+#set $dmenu "dmenu -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -f -i -fn 'DejaVu Sans Mono-14' -l 20"
+#bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu --display-binary
+#bindsym $mod+p exec brave
+bindsym $mod+p exec rofi -show drun
+#bindsym $mod+Shift+p exec j4-dmenu-desktop
 #bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu
 
 # change container layout (stacked, tabbed, toggle split)
@@ -139,7 +148,7 @@ bindsym $mod+F3 workspace "F3"
 
 bindsym $mod+apostrophe workspace "4 now"
 bindsym $mod+parenleft workspace "5 later"
-bindsym $mod+minus workspace "6 music"
+bindsym $mod+minus workspace "6"
 bindsym $mod+agrave workspace "0"
 
 # move focused container to workspace
@@ -151,7 +160,7 @@ bindsym $mod+Shift+F2 move container to workspace "F2"
 bindsym $mod+Shift+F3 move container to workspace "F3"
 bindsym $mod+Shift+apostrophe move container to workspace "4 now"
 bindsym $mod+Shift+parenleft move container to workspace "5 later"
-bindsym $mod+Shift+minus move container to workspace "6 music"
+bindsym $mod+Shift+minus move container to workspace "6"
 bindsym $mod+Shift+agrave move container to workspace "0"
 
 # move focused container between monitors
@@ -174,7 +183,7 @@ bindsym $mod+Left move workspace to output left
 bindsym $mod+Shift+q kill
 
 # floating mode
-#bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space floating toggle
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
 
@@ -208,15 +217,15 @@ mode "resize" {
 }
 
 # terminal
-# bindsym $mod+Return exec i3-sensible-terminal
+#bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec --no-startup-id cd "`xcwd`" && xterm
 
 # file manager
 bindsym $mod+e exec nemo
 
 # browser
-bindsym $mod+g exec google-chrome-stable
-bindsym $mod+Shift+g exec brave-browser-stable
+bindsym $mod+Shift+g exec google-chrome-stable
+bindsym $mod+n exec brave
 
 # Media player controls
 #bindsym XF86AudioPlay exec playerctl play
