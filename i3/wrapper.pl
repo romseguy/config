@@ -33,18 +33,23 @@ while (my ($statusline) = (<STDIN> =~ /^,?(.*)/)) {
     # Decode the JSON-encoded line.
     my @blocks = @{decode_json($statusline)};
 
-    my $lil = `tlp-stat -s | grep Mode | cut -d= -f2`;
-    # my $lil = `cat /etc/tlp.conf | egrep ^#TLP_DEFAULT_MODE | egrep -o 'AC|BAT'`;
-    # my $lol = `vnstat -m | tail -n +6 | head -n1`;
-    my $lol = `vnstat | grep today | awk '{print substr(\$8, 1, 3)""substr (\$9, 1, 1)}'`;
-    my $lal = `vnstat | grep yesterday | awk '{print substr (\$8, 1, 3)""substr (\$9, 1, 1)}'`;
-    my $lul = `vnstat -w | grep "current week" | awk '{print substr(\$9, 1, 3)""substr (\$10, 1, 1)}'`;
-    my $lel = `vnstat -m | grep "\`date +"%b '%y"\`" | awk '{print substr(\$9, 1, 3)""substr (\$10, 1, 1)}'`;
+    my $tlp = `tlp-stat -s | grep Mode | cut -d= -f2`;
+    #my $tlp = `cat /etc/tlp.conf | egrep ^#TLP_DEFAULT_MODE | egrep -o 'AC|BAT'`;
+
+    #my $today = `vnstat -m | tail -n +6 | head -n1`;
+    #my $today = `vnstat | grep today | awk '{print substr(\$8, 1, 3)""substr (\$9, 1, 1)}'`;
+    my $today = `vnstat | grep today | awk '{print substr(\$8, 1, 3)""substr (\$9, 1, 1)}' | head -n1`;
+    #my $yesterday = `vnstat | grep yesterday | awk '{print substr (\$8, 1, 3)""substr (\$9, 1, 1)}'`;
+    #my $week = `vnstat -w | grep "current week" | awk '{print substr(\$9, 1, 3)""substr (\$10, 1, 1)}'`;
+    #my $month = `vnstat -m | grep "\`date +"%b '%y"\`" | awk '{print substr(\$9, 1, 3)""substr (\$10, 1, 1)}'`;
+
+    my $pomo = `~/.local/bin/i3-gnome-pomodoro status`;
 
     # Prefix our own information (you could also suffix or insert in the
     # middle).
+    # full_text => "T: " . trim($today) . " | Y: " . trim($yesterday) . " | Wk: " . trim($week) . " | Mth: " . trim($month) . " | " . trim($tlp) . " ",
     @blocks = ({
-         full_text => "T: " . trim($lol) . " | Y: " . trim($lal) . " | Wk: " . trim($lul) . " | Mth: " . trim($lel) . " | " . trim($lil) . " ",
+         full_text => "" . trim($pomo) . " | " . trim($today) . " | " . trim($tlp) . ""
     }, @blocks);
 
     # Output the line as JSON.

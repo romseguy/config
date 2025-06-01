@@ -1,16 +1,67 @@
+# general
+set $mod Mod4
+set $alt Mod1
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+
+font pango:DejaVu Sans Mono 8
+workspace_layout tabbed
+
+#floating_modifier $mod
+#bindsym XF86Sleep nop
+#bindsym $mod+x debuglog toggle
+
 # startup
+exec --no-startup-id udiskie -t
 exec --no-startup-id nm-applet
 exec --no-startup-id parcellite
-#exec --no-startup-id xpad
 exec --no-startup-id xsettingsd
-#exec --no-startup-id redshift
-#exec --no-startup-id ~/Nextcloud-3.8.1-x86_64.AppImage
-#exec --no-startup-id ~/Executables/Nextcloud-3.10.0-rc2-x86_64.AppImage
+exec --no-startup-id redshift-gtk
 exec --no-startup-id setxkbmap -option caps:escape
 #exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background.jpg
-exec --no-startup-id && feh --bg-center ~/.config/i3/backgrounds/background3.jpg
+#exec --no-startup-id sleep 2 && feh --bg-fill ~/.config/i3/backgrounds/background18.png
+#exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background18.png
+#exec --no-startup-id sleep 2 && feh --bg-max ~/.config/i3/backgrounds/background18.jpg
+#exec --no-startup-id sleep 2 && feh --bg-center ~/.config/i3/backgrounds/background.jpg
 #exec --no-startup-id sleep 1 && ~/.config/i3/keyboard_fr
-#exec i3-gnome-pomodoro daemon &
+exec --no-startup-id i3-gnome-pomodoro daemon &
+exec --no-startup-id xpad
+
+# theme https://github.com/dracula/i3
+# class                 border		bground		text    indicator child_border
+client.focused		#6272A4 	#6272A4		#F8F8F2 #6272A4   #6272A4
+client.focused_inactive #44475A 	#44475A		#F8F8F2 #44475A   #44475A
+client.unfocused        #ffffff		#282A36		#BFBFBF #282A36   #282A36
+client.urgent           #44475A		#FF5555		#F8F8F2 #FF5555   #FF5555
+client.placeholder      #282A36		#282A36		#F8F8F2 #282A36   #282A36
+client.background       #F8F8F2
+
+#client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+#client.unfocused        #ffffff #222222 #888888 #292d2e   #222222
+#client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
+
+# bottom bar
+#exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh
+#exec --no-startup-id polybar-msg cmd toggle
+bar {
+	status_command i3status -c ~/.config/i3/i3status.conf | ~/.config/i3/wrapper.pl
+	# theme https://github.com/dracula/i3
+	font pango:DejaVu Sans Mono 8
+	colors {
+		background		#282A36
+		statusline		#F8F8F2
+		#separator		#44475A
+        separator       #FFFFFF
+		#focused_workspace	#4c7899 #285577 #ffffff
+		focused_workspace	#44475A #44475A #F8F8F2
+		active_workspace	#282A36 #44475A #F8F8F2
+		inactive_workspace	#282A36 #282A36 #BFBFBF
+		urgent_workspace	#FF5555 #FF5555 #F8F8F2
+		binding_mode		#FF5555 #FF5555 #F8F8F2
+	}
+	separator_symbol "|"
+}
 
 # Touchpad
 exec --no-startup-id xinput | grep -i Syn | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "libinput Tapping Enabled" 1
@@ -21,33 +72,20 @@ exec --no-startup-id xinput | grep -i Syn | cut -f2 | cut -c4- | xargs -I{} xinp
 #exec --no-startup-id xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Synaptics Click Action" 1, 3, 2
 #exec --no-startup-id xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Synaptics Tap Action" 0, 0, 0, 0, 1, 3, 2
 
-# theme https://github.com/dracula/i3
-# class                 border  bground text    indicator child_border
-client.focused          #6272A4 #6272A4 #F8F8F2 #6272A4   #6272A4
-client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
+bindsym $mod+r mode "resize"
+mode "resize" {
+	bindsym h resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym j resize shrink height 10 px or 10 ppt
+	bindsym l resize grow width 10 px or 10 ppt
 
-#client.unfocused        #333333 #222222 #888888 #292d2e   #222222
-#client.unfocused        #ffffff #222222 #888888 #292d2e   #222222
-#client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
-client.unfocused        #ffffff #282A36 #BFBFBF #282A36   #282A36
+	# back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
 
-client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
-client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
-client.background       #F8F8F2
-
-# general
-set $mod Mod4
-font pango:DejaVu Sans Mono 14
-workspace_layout tabbed
-floating_modifier $mod
-bindsym XF86Sleep nop
-#bindsym XF86KbdBrightnessUp exec ~/Executables/keyboard_on
-#bindsym XF86KbdBrightnessDown exec ~/Executables/keyboard_off
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+r restart
-bindsym $mod+x debuglog toggle
-bindsym $mod+B mode "$mode_system"
 set $mode_system (e) lock, (Shift+e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
+bindsym $mod+b mode "$mode_system"
 mode "$mode_system" {
 	bindsym e exec --no-startup-id ~/.config/i3/lock
 	bindsym Shift+e exec --no-startup-id i3-msg exit, mode "default"
@@ -61,52 +99,31 @@ mode "$mode_system" {
 }
 
 # screens toggle
+# on
+#bindsym $mod+Ctrl+F1 exec xrandr --output eDP-1 --auto
+bindsym $mod+Ctrl+F1 exec xrandr --output eDP-1 --below DP-2 --auto
+
+#bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --right-of eDP-1 --mode 1920x1080
+#bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --above eDP-1 --auto --rotate right
+bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --above eDP-1 --auto
+# off
 bindsym $mod+Ctrl+F2 exec xrandr --output eDP-1 --off
 bindsym $mod+Ctrl+Shift+F2 exec xrandr --output DP-2 --off
-bindsym $mod+Ctrl+F1 exec xrandr --output eDP-1 --auto
-bindsym $mod+Ctrl+Shift+F1 exec xrandr --output DP-2 --right-of eDP-1 --auto
 
 # theme toggle
-bindsym $mod+F9 exec bash ~/Executables/i3theme '"Adwaita"'
-bindsym $mod+Shift+F9 exec bash ~/Executables/i3theme '"Adwaita-dark"'
+#bindsym $mod+F9 exec bash ~/Executables/i3theme '"Adwaita"'
+#bindsym $mod+Shift+F9 exec bash ~/Executables/i3theme '"Adwaita-dark"'
 
 # pomo toggle
-bindsym $mod+F10 exec "i3-gnome-pomodoro skip"
-bindsym $mod+F11 exec "i3-gnome-pomodoro toggle"
-bindsym $mod+F12 exec "i3-gnome-pomodoro start-stop"
-#bindsym $mod+Shift+P exec ~/.local/bin/i3-gnome-pomodoro toggle
+#bindsym $mod+F10 exec "i3-gnome-pomodoro skip"
+#bindsym $mod+F11 exec "i3-gnome-pomodoro toggle"
+#bindsym $mod+F12 exec "i3-gnome-pomodoro start-stop"
+bindsym $mod+Shift+P exec ~/.local/bin/i3-gnome-pomodoro start-stop
 
-# bottom bar
-bar {
-	#i3bar_command i3bar --transparency
-
-	status_command ~/.config/i3/status.sh
-	#status_command ~/.config/i3/i3status.sh
-	#status_command i3status -c ~/.config/i3/i3status.conf
-
-	#status_command i3blocks
-	#status_command i3blocks -c ~/.config/i3/i3blocks.conf
-
-	#status_command ~/.config/i3/any_position_wrapper.sh
-	#status_command i3status -c ~/.config/i3/i3status.conf | ~/.config/i3/wrapper.pl
-
-	font pango:DejaVu Sans Mono 8
-	#separator_symbol ":***:"
-  #strip_workspace_numbers yes
-
-	# theme https://github.com/dracula/i3
-	colors {
-		background #282A36
-    statusline #F8F8F2
-    separator  #44475A
-		#focused_workspace #4c7899 #285577 #ffffff
-    focused_workspace  #44475A #44475A #F8F8F2
-    active_workspace   #282A36 #44475A #F8F8F2
-    inactive_workspace #282A36 #282A36 #BFBFBF
-    urgent_workspace   #FF5555 #FF5555 #F8F8F2
-    binding_mode       #FF5555 #FF5555 #F8F8F2
-	}
-}
+# clipboard
+#exec_always --no-startup-id nix-shell -p clipmenu --run "clipmenud &"
+#bindsym $mod+Shift+P exec nix-shell -p clipmenu --run clipmenu
+#bindsym $mod+Shift+P exec ~/Executables/clipmenu
 
 # windows
 for_window [all] title_window_icon padding 3px
@@ -115,12 +132,16 @@ for_window [all] title_window_icon padding 3px
 # The middle button over a titlebar kills the window
 bindsym --release button2 kill
 
-#bindsym $mod+t exec xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 1 # enable touchpad
-#bindsym $mod+Shift+t exec xinput | grep -i Touch | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 0 # disable touchpad
+# enable touchpad
+bindsym $mod+t exec xinput | grep -i synap | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 1 
+# disable touchpad
+bindsym $mod+Shift+t exec xinput | grep -i synap | cut -f2 | cut -c4- | xargs -I{} xinput --set-prop {} "Device Enabled" 0 
 
 # dmenu
 set $dmenu "dmenu -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -f -i -fn 'DejaVu Sans Mono-14' -l 20"
+set $xprompt "xprompt"
 bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu --display-binary
+#bindsym $mod+p exec j4-dmenu-desktop --dmenu=$xprompt --display-binary
 #bindsym $mod+p exec j4-dmenu-desktop --dmenu=$dmenu
 
 # change container layout (stacked, tabbed, toggle split)
@@ -139,7 +160,7 @@ bindsym $mod+F3 workspace "F3"
 
 bindsym $mod+apostrophe workspace "4 now"
 bindsym $mod+parenleft workspace "5 later"
-bindsym $mod+minus workspace "6 music"
+bindsym $mod+minus workspace "6 mail"
 bindsym $mod+agrave workspace "0"
 
 # move focused container to workspace
@@ -151,30 +172,28 @@ bindsym $mod+Shift+F2 move container to workspace "F2"
 bindsym $mod+Shift+F3 move container to workspace "F3"
 bindsym $mod+Shift+apostrophe move container to workspace "4 now"
 bindsym $mod+Shift+parenleft move container to workspace "5 later"
-bindsym $mod+Shift+minus move container to workspace "6 music"
+bindsym $mod+Shift+minus move container to workspace "6 mail"
 bindsym $mod+Shift+agrave move container to workspace "0"
 
 # move focused container between monitors
+bindsym $mod+Ctrl+k move container to output up
+bindsym $mod+Ctrl+j move container to output down
 bindsym $mod+Ctrl+h move container to output right
 bindsym $mod+Ctrl+l move container to output left
 
 # move focused workspace between monitors
+#bindsym $mod+Up move workspace to output up
+#bindsym $mod+Down move workspace to output down
 bindsym $mod+Right move workspace to output right
 bindsym $mod+Left move workspace to output left
 
-# https://thomasdegraaff.eu/notes/2022/05/06/i3-choose-monitors/
-# bindsym control+mod1+m exec xrandr --auto && arandr
-
-# @romseguy exec --no-startup-id xrandr --output DP-2 --auto --above eDP-1
-
-# https://thomasdegraaff.eu/notes/2022/05/06/i3-move-windows-between-monitors/
-# bindsym $mod+p move workspace to output right
+# @romseguy
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # floating mode
-#bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space floating toggle
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
 
@@ -194,29 +213,17 @@ bindsym $mod+Shift+l move right
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
 
-# enter resize mode
-bindsym $mod+r mode "resize"
-mode "resize" {
-	bindsym h resize shrink width 10 px or 10 ppt
-	bindsym k resize grow height 10 px or 10 ppt
-	bindsym j resize shrink height 10 px or 10 ppt
-	bindsym l resize grow width 10 px or 10 ppt
-
-	# back to normal: Enter or Escape
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
-}
-
 # terminal
-# bindsym $mod+Return exec i3-sensible-terminal
+#bindsym $mod+Return exec i3-sensible-terminal
+#bindsym $mod+Return exec st zsh
 bindsym $mod+Return exec --no-startup-id cd "`xcwd`" && xterm
 
 # file manager
 bindsym $mod+e exec nemo
 
 # browser
-bindsym $mod+g exec google-chrome-stable
-bindsym $mod+Shift+g exec brave-browser-stable
+#bindsym $mod+g exec google-chrome-stable
+#bindsym $mod+Shift+g exec brave-browser-stable
 
 # Media player controls
 #bindsym XF86AudioPlay exec playerctl play
@@ -244,7 +251,7 @@ bindsym $mod+Shift+g exec brave-browser-stable
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # STICKY NOTES
-#for_window [class="xpad" instance="xpad"] floating enable
+for_window [class="xpad" instance="xpad"] floating enable
 
 # BT APPLET
 # https://thomasdegraaff.eu/notes/2022/05/06/i3-bluetooth-applet/
@@ -254,12 +261,19 @@ exec --no-startup-id blueman-applet &
 # exec shutter --min_at_startup
 # bindsym Print         exec shutter --full
 # bindsym Shift+Print   exec shutter --select
-bindsym Print exec gnome-screenshot -i
+#bindsym Print exec gnome-screenshot -i
 
-## BRIGHTNESS
+# BRIGHTNESS
+## SCREEN
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 3 # decrease screen brightness
+bindsym  exec xbacklight -dec 3 # decrease screen brightness
 bindsym $mod+Down exec xbacklight -dec 5 # increase screen brightness
 bindsym $mod+Up exec xbacklight -inc 5 # decrease screen brightness
+
+## KEYBOARD
+bindsym XF86MonBrightnessDown exec --no-startup-id /home/x240/.local/bin/kb_off
+bindsym XF86KbdBrightnessUp exec --no-startup-id /home/x240/.local/bin/kb_on
+bindsym $mod+Shift+Down exec --no-startup-id /home/x240/.local/bin/kb_off
+bindsym $mod+Shift+Up exec --no-startup-id /home/x240/.local/bin/kb_on
 
 include ~/.config/i3/audio.conf
